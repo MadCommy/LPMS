@@ -1,0 +1,177 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{parskip}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\geometry{a4paper, left=20mm, right=20mm, top=20mm, bottom=20mm}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Anthony Catterwell}
+\chead{\textsc{University of Edinburgh}}
+\rhead{Linear Programming}
+
+\title{Linear Programming, Modelling \& Solution}
+\author{Anthony Catterwell}
+
+% \pagenumbering{gobble}
+
+\begin{document}
+\maketitle
+% \tableofcontents
+\break
+
+\section*{Derivation}
+We have
+$$f = \overline{\textbf{c}}^{T}\textbf{x} = \textbf{c}_B^T \textbf{x}_B + \textbf{c}_N^T \textbf{x}_N$$
+$$\overline{A}\textbf{x} = \textbf{b} = B\textbf{x}_B + N\textbf{x}_N$$
+combining the two gives us:
+\begin{align*}{}
+	f &= \widehat{f} + \widehat{\textbf{c}}_N^T \textbf{x}_N \\
+	  &= \{ \textbf{c}^T_B \widehat{\textbf{b}} \} +
+	  \{ \textbf{c}_N - N^T B^{-T} \textbf{c}_B \} \; \textbf{x}_N \\
+	  &= \{ \textbf{c}_B^T \, B^{-1}\textbf{b} \} +
+	  \{ \textbf{c}_N - N^T B^{-T} \textbf{c}_B \} \; \textbf{x}_N
+\end{align*}
+where
+$$\widehat{\textbf{c}}_N = \textbf{c}_N - N^TB^{-T}\textbf{c}_B$$
+$$\widehat{f} = \textbf{c}_B^T\widehat{\textbf{b}}$$
+$\widehat{f}$ is the objective value when $\textbf{x}_N = \textbf{0}$ (so $\textbf{x}_B = \widehat{\textbf{b}}$)\\
+
+
+\section*{LP Theory: Analysis of LPs in standard form}
+\subsection*{Definition: Feasible Vertex I}
+The vertex of the feasible region $K$ is a point $\textbf{x} \in K$ which does not lie strictly within any line segment joining two points in $K$.
+
+\subsection*{Theorem 1: A unique optimal solution is a vertex}
+If an LP has a unique optimal solution then it is a vertex.
+
+\subsection*{Theorem 2: Non-unique optimal solution at a vertex}
+If an LP has a non-unique optimal solution then there is an optimal solution at a vertex.
+
+\subsection*{Definition: Feasible Vertex II}
+A vertex of the feasible region $K$ is a point $\textbf{x} \in K$ with
+\begin{itemize}
+	\item $n$ zero components
+	\item $m$ non-negative components uniquely defined by $\overline{A}\textbf{x} = \textbf{b}$
+\end{itemize}
+
+\section*{LP Theory: Basic feasible solutions and optimality conditions for LP problems}
+\subsection*{Definition: A basic solution}
+The point $\textbf{x} \in \mathbb{R}^{n+m}$ is a \textbf{basic solution} of an LP problem in standard form if there is a \textbf{partition} of $\{1, 2, \ldots, n+m\}$ into
+\begin{itemize}
+	\item A set $\mathcal{N}$ of $n$ indices of \textbf{non-basic variables} with value zero
+	\item A set $\mathcal{B}$ of $n$ indices of \textbf{basic variables} whose values are then uniquely defined by the $m$ equations.
+\end{itemize}
+
+\subsection*{Why can't we just work with vertices?}
+\begin{itemize}
+	\item A vertex is also a point with $n$ zero components and $m$ non-negative components uniquely defined by $\overline{A}\textbf{x} = \textbf{b}$
+	\item A \textbf{degenerate} vertex has more than $n$ zero components
+		\begin{itemize}
+			\item More than on partition of $\{1, 2, \ldots, n+m\}$ into sets $\mathcal{N}$ and $\mathcal{B}$ is possible
+			\item There may be more than one basic solution at a degenerate vertex.
+		\end{itemize}
+\end{itemize}
+
+\subsection*{Theorem 3: A sufficient optimality condition for LP problems}
+A point $\textbf{x} \in K$ is an optimal solution of an LP problem if it is a basic feasible solution with non-positive \textbf{reduced costs} $\widehat{\textbf{c}}_N = \textbf{c}_N - N^{T}B^{-T}\textbf{c}_B \le 0$
+
+\section*{The simplex algorithm}
+\subsection*{Description of the simplex algorithm}
+\begin{enumerate}
+	\item If the reduced costs are non-positive then \textbf{stop} \\
+		\textbf{The solution is optimal}
+	\item Determine the non-basic variable $x_{q'}$ with the most positive reduced cost
+	\item Determine the feasible direction $\textbf{d}$ when $x_{q'}$ is increased from zero
+	\item If no basic variable is zeroed on $\textbf{x} + \alpha \textbf{d}$ then \textbf{stop} \\
+		\textbf{The LP is unbounded}
+	\item Determine the first basic variable $x_{p'}$ to be zeroed on $\textbf{x} + \alpha \textbf{d}$
+	\item Make $x_{p'}$ non-basic and $x_{q'}$ basic
+	\item Go to 1
+\end{enumerate}
+
+\subsection*{Definition of the simplex algorithm}
+Given a basic feasible solution \textbf{x} with $\mathcal{B}$ and $\mathcal{N}$
+\begin{enumerate}
+    \item If $\widehat{\textbf{c}}_N \le \textbf{0}$ then \textbf{stop} 
+		(with $\widehat{\textbf{c}}_N = \textbf{c}_N - N^TB^{-T}\textbf{c}_B$)\\
+        \textbf{The solution is optimal}
+	\item Determine the index $q' \in \mathcal{N}$ of the variable $x_{q'}$ with the most positive reduced cost $\widehat{c}_q$ \\
+		$q'$ is the $q\text{th}$ entry in $\mathcal{N}$.
+	\item Let $\widehat{\textbf{a}}_q = B^{-1}\textbf{a}_q$, where $\textbf{a}_q$ is column $q$ of $N$
+	\item If $\widehat{\textbf{a}}_q \le \textbf{0}$ then \textbf{stop} \\
+		\textbf{The LP is unbounded}
+	\item Determine the index $p' \in \mathcal{B}$ of the variable $x_{p'}$ corresponding to $p = \text{argmin}_{i=1}^m_{,\widehat{\textbf{a}}_{iq}>0} \frac{\widehat{b}_i}{\widehat{a}_{iq}}$
+		(with $\widehat{\textbf{b}} = B^{-1}\textbf{b}$)\\
+		$p'$ is the $p\text{th}$ entry in $\mathcal{B}$
+	\item Exchange indices $p'$ and $q'$ between $\mathcal{B}$ and $\mathcal{N}$ to yield a new basic feasible solution
+	\item Go to 1
+\end{enumerate}
+
+\subsection*{Obtaining the initial basic feasible solution}
+As the initial basic feasible solution, try the ``all slack'' basis (i.e.\ starting at the origin)
+	$$ \mathcal{B} = \{ n+1, \ldots, n+m \} \text{ and } \mathcal{N} = \{ 1, \ldots, n \}$$
+So we have:
+\begin{itemize}
+	\item $\widehat{\textbf{b}} = \textbf{b}$
+	\item $\widehat{\textbf{c}}_N = \textbf{c}$
+	\item Basis is feasible iff $\textbf{b} \ge \textbf{0}$
+\end{itemize}
+
+% \subsection*{Special cases and analysis}
+\subsection*{How to start if $\textbf{b} \ngeq \textbf{0}$}\\
+Can't use the ``all-slack'' basis (because the origin is not in the feasible region)
+\begin{itemize}
+	\item If $\textbf{b} \ngeq \textbf{0}$ then, for each constraint $i$, subtract an \textbf{artificial variable} $x_{n+m+i} \geq 0$
+	\item Replace the objective $f = \overline{\textbf{c}}^T\textbf{x}$ with the \textbf{Phase I} objective $f = - \sum^m_{i=1} x_{n+m+i}$ (i.e.\ the negated sum of infeasibilities)
+	\end{itemize}
+\subsection*{The Phase I problem}
+Construct an initial basic feasible solution as follows: For $i = 1, \ldots, m$\\
+If $b_i \geq 0$
+\begin{itemize}
+    \item Slack $x_{n+i} = b_i \geq 0$ is basic
+    \item Artificial $x_{n+m+i} = 0$ is non-basic
+    \item Column $i$ of $B$ is $\textbf{e}_i$
+\end{itemize}
+If $b_i < 0$
+\begin{itemize}
+    \item Slack $x_{n+i}$ is non-basic
+    \item Artificial $x_{n+m+i} = -b_i > 0$ is basic
+    \item Column $i$ of $B$ is $-\textbf{e}_i$
+\end{itemize}
+Basis matrix $B$ is non-singular and, by construction, $\widehat{\textbf{b}} \geq \textbf{0}$
+\subsubsection*{At an optimal solution of the Phase I problem}
+The simplex algorithm drives $f$ up towards zero.\\
+At an optimal basic feasible solution $x$ of the Phase I problem:\\
+If $f=0$ 
+\begin{itemize}
+	\item The values of the original and slack variables at $x$ yield a basic feasible solution for the original LP
+\end{itemize}
+If $f<0$ 
+\begin{itemize}
+	\item The artificial variables cannot all be driven to zero
+	\item The original LP is \textbf{infeasible}
+\end{itemize}
+
+If the Phase I problem is solved with $f=0$ (and all artificial variables being in $\mathcal{N}$)
+\begin{enumerate}
+	\item Remove the artificial variables from the problem (they are now zero)
+	\item Revert to the original objective function
+	\item Solve the original \textbf{Phase II} problem
+\end{enumerate}
+
+\subsubsection*{Does the algorithm terminate?}
+\begin{itemize}
+	\item If $\widehat{\textbf{b}}$ has any zero components then $\textbf{x}$ is a \textbf{degenerate} vertex
+	\item There may be several basic feasible solutions at $\textbf{x}$
+	\item If $\widehat{b}_p = 0$ then $\overline{\alpha} = 0$ so the simplex algorithm does not move to a new vertex
+	\item It may never leave!
+\end{itemize}
+
+\end{document}
