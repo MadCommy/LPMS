@@ -243,4 +243,62 @@ If the Phase I problem is solved with $f=0$ (and all artificial variables being 
     \item It may never leave!
 \end{itemize}
 
+\subsection*{Sensitivity and fair prices}
+
+\subsection*{Sensitivity theory and weak duality}
+
+\begin{itemize}
+    \item \textbf{LP Duality} \\
+        For the following LP problem
+        \[
+            \text{maximise} \ f =
+            \textbf{c}^T \textbf{x} \ \text{subject to} \ A\textbf{x} \leq \textbf{b}
+        \]
+        The \emph{dual} LP problem is
+        \[
+            \text{minimise} \ f =
+            \textbf{b}^T \textbf{y} \ \text{subject to} \ A^T\textbf{y} \geq \textbf{c}
+        \]
+
+    \item \textbf{Theorem 6} Weak duality theorem \\
+        If $x$ and $y$ are feasible solutions of the primal and dual problems respectively, then
+        \[
+            \textbf{c}^T \textbf{x} \leq \textbf{b}^T \textbf{y}
+        \]
+
+    \item \textbf{Weak duality theorem --- consequences}
+        \begin{itemize}
+            \item If the primal problem (P) is unbounded, then the dual problem (D) is infeasible
+            \item If the dual problem (D) is unbounded, then the primal problem (P) is infeasible
+        \end{itemize}
+
+\end{itemize}
+
+\subsection*{Strong duality and the tableau simplex method}
+For the primal LP
+\[
+    \text{maximise} \ f = \textbf{c}^T \textbf{x} \ \text{subject to } \ \textbf{Ax} \leq \textbf{b}
+\]
+
+If $\textbf{x}^*$ is an optimal basic feasible solution for the problem in standard form then
+
+\begin{itemize}
+    \item The optimal solution of
+        \[
+            \text{minimise} \ f =
+            \textbf{b}^T\textbf{y} \ \text{subject to} \ \textbf{A}^T\textbf{y} \geq \textbf{c}
+        \]
+        is $\textbf{y}^* = \pi = \textbf{B}^{-T}\textbf{c}_B$
+
+    \item The optimal objective values are equal:
+        $\textbf{c}^T\textbf{x}^* = \textbf{b}^T\textbf{y}^*$
+
+    \item \textbf{Conclusions}
+        \begin{itemize}
+            \item Only one of (P) and (D) need ever be solved
+            \item Leads to the (practically preferred) \emph{dual simplex method}.
+        \end{itemize}
+
+\end{itemize}
+
 \end{document}
